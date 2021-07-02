@@ -1,6 +1,15 @@
 const CASH_NAME = 'version-1';
-const urlsToCashe = [ 'index.html', 'offline.html' ];
+const urlsToCashe = [ 
+    'index.html', 
+    'offline.html', 
+    'images/logo.png',
+    'images/icon-192x192.png', 
+    'images/icon-256x256.png', 
+    'images/icon-384x384.png',
+    'images/icon-512x512.png'
+];
 
+const self = this;
 // install service worker
 self.addEventListener('install', (event) => {
     event.waitUntil(
@@ -25,5 +34,15 @@ self.addEventListener('fetch', (event) => {
 
 // Activate the service worker
 self.addEventListener('activate', (event) => {
-    
+    const cacheWhitelist = [];
+    cacheWhitelist.push(CASH_NAME);
+    event.waitUntil(
+        caches.keys().then((cacheNames) => Promise.all(
+            cacheNames.map((cacheName) => {
+                if (!cacheWhitelist.includes(cacheName)) {
+                    return caches.delete(cacheName);
+                }
+            })
+        ))
+    )
 })
